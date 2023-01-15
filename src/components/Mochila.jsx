@@ -57,7 +57,51 @@ function Mochilas() {
   const [result, setResult] = useState();
   const [pesoRestante, setPesoRestante] = useState();
 
+  const findPeso = () => {
+    var user = document.getElementById("peso_user").value;
+    peso_recomendado = user * 0.1 * 1000;
+    console.log("peso_recomendado", peso_recomendado);
+    console.log(items);
+    for (let i = 0; i < items.length; i++) {
+      const newItems = [...items];
+      newItems[i].used_qty = 0;
+      setItems(newItems);
+    }
+    console.log("items", items);
+    const sortedItems = items.sort((a, b) => a.priority - b.priority);
+    // console.log(sortedItems);
 
+    console.log("sortedItems,", sortedItems);
+    setResult(sortedItems);
+    for (let i = sortedItems.length - 1; i >= 0; i--) {
+      var a = document.getElementById(`qty_${i}`).value;
+      var b = document.getElementById(`peso_${i}`).value;
+      var c = document.getElementById(`priority_${i}`).value;
+      if (a === "" || b === "" || c === "" || user === "") {
+        document.getElementById("result").innerHTML =
+          "Todos os campos devem ser preenchidos";
+        return;
+      }
+      q_item[i] = sortedItems[i].qty;
+    }
+
+    let peso_max = [];
+    for (let i = 0; i < sortedItems.length; i++) {
+      while (peso_recomendado >= sortedItems[i].peso && q_item[i] > 0) {
+        peso_recomendado -= sortedItems[i].peso;
+        q_item[i]--;
+
+        const newItems = [...sortedItems];
+        newItems[i].used_qty += 1;
+        setResult(newItems);
+
+        peso_max.push(sortedItems[i]);
+        console.log("peso_recomendado", peso_recomendado);
+      }
+    }
+    // setResult(peso_max);
+    console.log("peso_max", result);
+  };
 
   return(
   <div className="main">
@@ -67,12 +111,12 @@ function Mochilas() {
         return (
           <div key={item.id}>
             <form class="">
-              <div class="q_div">
+              <div class="input">
                 <label for="R$2">
                   {item.name}
                   <input
                     min={0}
-                    class="q_inp"
+                    class="css_label"
                     id={`qty_${item.id}`}
                     placeholder="Quantidade"
                     type="number"
@@ -89,7 +133,7 @@ function Mochilas() {
                   Peso (g)
                   <input
                     min={1}
-                    class="q_inp"
+                    class="css_label"
                     id={`peso_${item.id}`}
                     placeholder="R$2"
                     type="number"
@@ -106,7 +150,7 @@ function Mochilas() {
                 <label for="R$2">
                   Priority
                   <input
-                    class="q_inp"
+                    class="css_label"
                     id={`priority_${item.id}`}
                     placeholder="R$2"
                     type="number"
@@ -124,12 +168,12 @@ function Mochilas() {
           </div>
         );
       })}
-      <form class="inp-container">
+      <form class="input_container">
         <input
           placeholder="Seu peso em KG"
           type="number"
           id="peso_user"
-          class="inp"
+          class="your_weight"
           min={40}
         />
       </form>
@@ -165,7 +209,7 @@ function Mochilas() {
             g
           </p>
 
-          <p style={{ fontSize: "20px" }}>Peso restante: {peso_recomendado}g</p>
+          <p style={{ fontSize: "20px" }}>Peso restante: {peso_recomendado.toFixed(2)}g</p>
         </div>
       </div>
     )}
