@@ -1,11 +1,16 @@
 import "../mochila.css";
+
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 var peso_recomendado = 0;
 let q_item = [];
 function Mochilas() {
   useEffect(() => {
     console.log("useEffect");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q_item]);
+
+  const navigate = useNavigate()
 
   const [items, setItems] = useState([
     {
@@ -55,7 +60,7 @@ function Mochilas() {
     },
   ]);
   const [result, setResult] = useState();
-  const [pesoRestante, setPesoRestante] = useState();
+  // const [pesoRestante, setPesoRestante] = useState();
 
   const findPeso = () => {
     var user = document.getElementById("peso_user").value;
@@ -69,7 +74,6 @@ function Mochilas() {
     }
     console.log("items", items);
     const sortedItems = items.sort((a, b) => a.priority - b.priority);
-    // console.log(sortedItems);
 
     console.log("sortedItems,", sortedItems);
     setResult(sortedItems);
@@ -103,117 +107,136 @@ function Mochilas() {
     console.log("peso_max", result);
   };
 
-  return(
-  <div className="main">
-    <div className="container">
-      <p>Itens</p>
-      {items.map((item, index) => {
-        return (
-          <div key={item.id}>
-            <form class="">
-              <div class="input">
-                <label for="R$2">
-                  {item.name}
-                  <input
-                    min={0}
-                    class="css_label"
-                    id={`qty_${item.id}`}
-                    placeholder="Quantidade"
-                    type="number"
-                    onChange={(e) => {
-                      const newItems = [...items];
-                      newItems[item.id].qty = Number(e.target.value);
-                      setItems(newItems);
-                      setResult(null);
-                    }}
-                    defaultValue={q_item[index] ? q_item[index] : item.qty}
-                  />
-                </label>
-                <label for="R$2">
-                  Peso (g)
-                  <input
-                    min={1}
-                    class="css_label"
-                    id={`peso_${item.id}`}
-                    placeholder="R$2"
-                    type="number"
-                    defaultValue={item.peso}
-                    onChange={(e) => {
-                      const newItems = [...items];
-                      newItems[item.id].peso = Number(e.target.value);
-                      setItems(newItems);
-                      setResult(null);
-                    }}
-                  />
-                </label>
-
-                <label for="R$2">
-                  Priority
-                  <input
-                    class="css_label"
-                    id={`priority_${item.id}`}
-                    placeholder="R$2"
-                    type="number"
-                    defaultValue={item.priority}
-                    onChange={(e) => {
-                      const newItems = [...items];
-                      newItems[item.id].priority = Number(e.target.value);
-                      setItems(newItems);
-                      setResult(null);
-                    }}
-                  />
-                </label>
-              </div>
-            </form>
-          </div>
-        );
-      })}
-      <form class="input_container">
-        <input
-          placeholder="Seu peso em KG"
-          type="number"
-          id="peso_user"
-          class="your_weight"
-          min={40}
-        />
-      </form>
-
-      <input type="button" class="btn" value="Calcular" onClick={findPeso} />
-      <div class="result">
-        <p id="result"></p>
+  return (
+    <>
+      <div className="header">
+        <h3>UnB - FGA</h3>
+        <h3>Projeto de Algoritmos - Greed</h3>
+        <button className="header-btn" onClick={() => navigate("/")}>
+          Home
+        </button>
       </div>
-    </div>
-    {result && (
-      <div className="container">
-        <p>Resultado</p>
-        <div className="result">
-          <div>
-            <p style={{ fontSize: "20px" }}>Item - Ícone - Peso - Quantidade</p>
-          </div>
-          {result.map((item, index) => {
+      <div className="main">
+        <div className="container">
+          <p>Itens</p>
+          {items.map((item, index) => {
             return (
-              <div key={index}>
-                <p style={{ fontSize: "20px" }}>
-                  {item.name} - {item.icon} - {item.peso}g - {item.used_qty}
-                </p>
+              <div key={item.id}>
+                <form>
+                  <div class="input">
+                    <label for="R$2">
+                      {item.name}
+                      <input
+                        min={0}
+                        class="css_label"
+                        id={`qty_${item.id}`}
+                        placeholder="Quantidade"
+                        type="number"
+                        onChange={(e) => {
+                          const newItems = [...items];
+                          newItems[item.id].qty = Number(e.target.value);
+                          setItems(newItems);
+                          setResult(null);
+                        }}
+                        defaultValue={q_item[index] ? q_item[index] : item.qty}
+                      />
+                    </label>
+                    <label for="R$2">
+                      Peso (g)
+                      <input
+                        min={1}
+                        class="css_label"
+                        id={`peso_${item.id}`}
+                        placeholder="200"
+                        type="number"
+                        defaultValue={item.peso}
+                        onChange={(e) => {
+                          const newItems = [...items];
+                          newItems[item.id].peso = Number(e.target.value);
+                          setItems(newItems);
+                          setResult(null);
+                        }}
+                      />
+                    </label>
+
+                    <label for="R$2">
+                      Priority
+                      <input
+                        class="css_label"
+                        id={`priority_${item.id}`}
+                        placeholder="1"
+                        type="number"
+                        defaultValue={item.priority}
+                        onChange={(e) => {
+                          const newItems = [...items];
+                          newItems[item.id].priority = Number(e.target.value);
+                          setItems(newItems);
+                          setResult(null);
+                        }}
+                      />
+                    </label>
+                  </div>
+                </form>
               </div>
             );
           })}
-        </div>
-        <div>
-          <p style={{ fontSize: "20px" }}>
-            Peso total:{" "}
-            {result.reduce((acc, item) => {
-              return acc + item.peso * item.used_qty;
-            }, 0)}
-            g
-          </p>
+          <form class="input_container">
+            <input
+              placeholder="Seu peso em KG"
+              type="number"
+              id="peso_user"
+              class="your_weight"
+              min={40}
+            />
+          </form>
 
-          <p style={{ fontSize: "20px" }}>Peso restante: {peso_recomendado.toFixed(2)}g</p>
+          <input
+            type="button"
+            class="btn"
+            value="Calcular"
+            onClick={findPeso}
+          />
+          <div class="result">
+            <p id="result"></p>
+          </div>
         </div>
+        {result && (
+          <div className="container">
+            <p>Resultado</p>
+            <div className="result">
+              <div>
+                <p style={{ fontSize: "20px" }}>
+                  Item - Ícone - Peso - Quantidade
+                </p>
+              </div>
+              {result.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <p style={{ fontSize: "20px" }}>
+                      {item.name} - {item.icon} - {item.peso}g - {item.used_qty}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <p style={{ fontSize: "20px" }}>
+                Peso total:{" "}
+                {result.reduce((acc, item) => {
+                  return acc + item.peso * item.used_qty;
+                }, 0)}
+                g
+              </p>
+
+              <p style={{ fontSize: "20px" }}>
+                Peso restante: {peso_recomendado.toFixed(2)}g
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    )}
-  </div>);
+    </>
+  );
 }
 
 export default Mochilas;
