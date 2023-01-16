@@ -5,7 +5,7 @@ export const usuarios = [
   },
   {
     email: "ailton@unb.br",
-    password: "123456",
+    password: "12345654321",
   },
   {
     email: "mkeunemann0@fda.gov",
@@ -78,7 +78,7 @@ export const laudosMedicos = [
   {
     paciente: "Jaimie Rantoull",
     data: "11/28/2022",
-    laudo: "Asma crinica",
+    laudo: "Asma crônica",
   },
   {
     paciente: "Devy Cicconettii",
