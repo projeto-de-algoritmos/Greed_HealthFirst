@@ -1,3 +1,5 @@
+import { usuarios } from "../mocks";
+
 /* DATA STRUCTURE TO EACH TREE NODE */
 class Node {
     constructor(char, weight, left, right) {
@@ -66,7 +68,7 @@ const encodeeach = (s, tree) => {
 
 /* ======================= GLOBAL VARIABLES ======================== */
 let tree;
-/* ================================================================= */
+
 
 /* COMPRESS A TEXT STRING */
 const compress = () => {
@@ -80,25 +82,28 @@ const compress = () => {
     
 }
 
-export function compare(senha1, senha2) {
+export function login(credenciais) {
 
     compress()
 
-    let a = senha1;
-    let b = senha2;
+    let user = usuarios.find(usuario => usuario.email === credenciais.email);
+
+    if (!user) return 404
 
     let encodedPass = ''
     let encodedInput = ''
-    for (let i = 0; i < a.length; i++) {
-        encodedInput += encodeeach(a.charAt(i),tree).join('');
+    for (let i = 0; i < credenciais.senha.length; i++) {
+        encodedInput += encodeeach(credenciais.senha.charAt(i),tree).join('');
     }
 
-    for (let i = 0; i < b.length; i++) {
-        encodedPass += encodeeach(senha2.charAt(i),tree).join('');
+    for (let i = 0; i < user.password.length; i++) {
+        encodedPass += encodeeach(user.password.charAt(i),tree).join('');
     }
 
+    if(encodedInput === encodedPass) return 200
+    else return 404
     
-    console.log("Sao iguais?", encodedInput===encodedPass);
+    
 }
 
 
