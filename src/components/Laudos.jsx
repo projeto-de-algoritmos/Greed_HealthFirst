@@ -7,7 +7,7 @@ import {
   secureKey,
 } from "../services/huffman";
 import { useNavigate } from "react-router-dom";
-import { laudosMedicos } from "../mocks";
+import { laudosMedicos, usuarios } from "../mocks";
 
 const Laudos = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +17,8 @@ const Laudos = () => {
   const [decodedPass, setDecodedPass] = useState("");
   const [decodeBtn, setDecodeBtn] = useState(false);
   const [key, setKey] = useState("");
+  const [showMails, setShowMails] = useState(false);
+  const [mails, setMails] = useState([]);
 
   const navigate = useNavigate();
 
@@ -56,6 +58,12 @@ const Laudos = () => {
     setDecodedPass("");
     setEncondedPass("");
     setKey("");
+    setShowMails(false);
+  };
+
+  const handleShowMails = () => {
+    setShowMails(true);
+    setMails(usuarios.map((usuario) => usuario.email));
   };
 
   return (
@@ -74,16 +82,18 @@ const Laudos = () => {
             <input
               style={{ height: "33px", width: "200px", padding: "5px" }}
               placeholder="Digite seu email"
+              value={email}
               onChange={(event) => setEmail(event.target.value)}
             ></input>
             <input
+              type="password"
               style={{ height: "33px", width: "200px", padding: "5px" }}
               placeholder="Digite sua senha"
               onChange={(event) => setSenha(event.target.value)}
             ></input>
-            <div>
-              <button className="rounded-btn" onClick={() => setMode(3)}>
-                <i>i</i>
+            <div className="btns-div">
+              <button className="header-btn" onClick={() => setMode(3)}>
+                Recuperar
               </button>
               <button className="primary-btn" onClick={handleSubmit}>
                 Entrar
@@ -111,39 +121,75 @@ const Laudos = () => {
           </div>
         )}
         {mode === 3 && (
-          <div className="box" style={{ width: "900px", margin: "50px" }}>
-            <h1>Recupere sua senha</h1>
-            <input
-              style={{ height: "33px", width: "200px", padding: "5px" }}
-              placeholder="Digite seu email"
-              onChange={(event) => setEmail(event.target.value)}
-            ></input>
-            <div className={!decodeBtn ? "btns-div" : ""}>
-              {!decodeBtn && (
-                <button className="header-btn" onClick={handleGoBack}>
-                  Voltar
-                </button>
+          <>
+            <div className="box" style={{ width: "900px", margin: "50px" }}>
+              {!showMails && (
+                <button onClick={handleShowMails}>Mostrar emails</button>
               )}
-              <button className="primary-btn" onClick={handleRecovery}>Mostrar</button>
-            </div>
-            {encodedPass && <p>Sua senha codificada: {encodedPass}</p>}
-            {decodeBtn && (
-              <>
-                <input
-                  style={{ height: "33px", width: "200px", padding: "5px" }}
-                  placeholder="Digite a chave secreta do sistema"
-                  onChange={(event) => setKey(event.target.value)}
-                ></input>
-                <div className="btns-div">
+              <h1>Recupere sua senha</h1>
+
+              <input
+                style={{ height: "33px", width: "200px", padding: "5px" }}
+                placeholder="Digite seu email"
+                onChange={(event) => setEmail(event.target.value)}
+              ></input>
+              {!decodeBtn && (
+                <div className={"btns-div"}>
                   <button className="header-btn" onClick={handleGoBack}>
                     Voltar
                   </button>
-                  <button className="primary-btn" onClick={handleShowPassword}>Decodificar</button>
-                  {decodedPass && <p>Sua senha decodificada: {decodedPass}</p>}
+
+                  <button className="primary-btn" onClick={handleRecovery}>
+                    Mostrar
+                  </button>
                 </div>
-              </>
+              )}
+              {encodedPass && <p>Sua senha codificada: {encodedPass}</p>}
+              {decodeBtn && (
+                <>
+                  <input
+                    style={{ height: "33px", width: "200px", padding: "5px" }}
+                    placeholder="Digite a chave secreta do sistema"
+                    onChange={(event) => setKey(event.target.value)}
+                  ></input>
+                  <div className="btns-div">
+                    <button className="header-btn" onClick={handleGoBack}>
+                      Voltar
+                    </button>
+                    <button
+                      className="primary-btn"
+                      onClick={handleShowPassword}
+                    >
+                      Decodificar
+                    </button>
+                  </div>
+                  {decodedPass && <p>Sua senha decodificada: {decodedPass}</p>}
+                </>
+              )}
+            </div>
+            {showMails && (
+              <div className="box" style={{ width: "400px", margin: "50px" }}>
+                <button onClick={() => setShowMails(false)}>Fechar</button>
+                <div
+                  style={{
+                    height: "300px",
+                    overflow: "scroll",
+                    width: "300px",
+                    padding: "15px",
+                  }}
+                >
+                  {mails.map((mail) => (
+                    <div
+                      className="flex-column"
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <li>{mail}</li>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>
