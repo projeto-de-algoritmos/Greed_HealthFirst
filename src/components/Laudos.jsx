@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "../App.css";
 import { login } from "../services/huffman";
 import { useNavigate } from "react-router-dom";
+import { laudosMedicos } from "../mocks";
 
 const Laudos = () => {
-  const [laudos, setLaudos] = useState([]);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mode, setMode] = useState(1);
@@ -32,9 +32,9 @@ const Laudos = () => {
           Home
         </button>
       </div>
-      <div className="home-container">
+      <div className="home-container" style={{}} >
         {mode === 1 && (
-          <div className="box">
+          <div className="box" >
             <h1>Digite suas credenciais</h1>
             <input
               style={{ height: "33px", width: "200px", padding: "5px" }}
@@ -52,8 +52,17 @@ const Laudos = () => {
           </div>
         )}
         {mode === 2 && (
-          <div className="box">
+          <div className="box" style={{width: "900px",margin: "50px"}}>
             <h1>Seus laudos</h1>
+            <div style={{ height: "300px", overflow: "scroll", width: "500px" }}>
+              {laudosMedicos.map((laudo) => (
+                <div className="flex-column" style={{marginBottom:"10px"}}>
+                  <li>{laudo.paciente}</li>
+                  <span style={{ fontSize: "10pt" }}>{laudo.laudo}</span>
+                </div>
+              ))}
+            </div>
+
             <button className="header-btn" onClick={() => setMode(1)}>
               Voltar
             </button>
