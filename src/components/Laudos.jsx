@@ -39,6 +39,7 @@ const Laudos = () => {
 
     if (res === 404) {
       alert("Email não cadastrado");
+      return;
     }
 
     setEncondedPass(res);
